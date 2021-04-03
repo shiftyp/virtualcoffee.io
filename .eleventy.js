@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { DateTime } = require('luxon');
 const fs = require('fs');
+const { exec } = require('child_process');
 const pluginRss = require('@11ty/eleventy-plugin-rss');
 const pluginSyntaxHighlight = require('@11ty/eleventy-plugin-syntaxhighlight');
 const pluginNavigation = require('@11ty/eleventy-navigation');
@@ -130,6 +131,21 @@ module.exports = function (eleventyConfig) {
     },
     ui: false,
     ghostMode: false,
+  });
+
+  eleventyConfig.on('afterBuild', async () => {
+    exec(
+      `
+        mkdir -p _root/assets/{images,favicon} &&
+        rsync _site/assets/images/ _root/assets/images &&
+        rsync _site/assets/favicon/ _root/assets/favicon &&
+        diff -ruN _root/ _site/ | sed \'/Binary\ files\ /d\' | patch -d _root -p1
+      `,
+      (err) => {
+        if (err) console.error('Error syncing Vite and 11ty roots:', err);
+        else console.log('Vite and 11ty roots synced');
+      }
+    );
   });
 
   return {

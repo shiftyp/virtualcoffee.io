@@ -13,22 +13,13 @@ for (file of inputFiles) {
 }
  
 module.exports = {
-  root: '_site',
+  root: '_root',
   build: {
     rollupOptions: {
       input,
       output: {
           dir: 'dist/'
       }
-    }
-  },
-  server: {
-    watch: {
-      ignoreInitial: true,
-      waitWriteFinish: {
-        stabilityThreshold: 500,
-        pollInterval: 100
-      },
     }
   }
 };
