@@ -133,7 +133,7 @@ module.exports = function (eleventyConfig) {
     ghostMode: false,
   });
 
-  eleventyConfig.on('afterBuild', async () => {
+  eleventyConfig.on('afterBuild', () => {
     exec(
       `
         mkdir -p _root/assets/{images,favicon} &&
